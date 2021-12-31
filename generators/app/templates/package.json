@@ -1,7 +1,7 @@
 {
   "name": "<%= appName %>",
   "version": "<%= appVersion %>",
-  "description": "",
+  "description": "<%= appDescription %>",
   "scripts": {
     "commit-msg:create": "node create-commit-msg.js",
     "commitlint:config": "npm run commit-msg:create",

@@ -5,8 +5,7 @@
   "homepage": "",
   "author": {
     "name": "Batuhan Yahşi",
-    "email": "yahsibatuhan@gmail.com",
-    "url": ""
+    "email": "yahsibatuhan@gmail.com"
   },
   "files": [
     "generators"
@@ -14,7 +13,7 @@
   "main": "generators/index.js",
   "keywords": [
     "",
-    "framewrok-package-creator"
+    "framework-package-creator"
   ],
   "devDependencies": {
     "yeoman-test": "^1.7.0",
@@ -26,14 +25,16 @@
     "eslint-config-prettier": "^6.6.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-config-xo": "^0.27.2",
-    "jest": "^26.1.0"
+    "jest": "^26.1.0",
+    "@piri/eslint-config": "^1.0.1"
   },
   "engines": {
     "npm": ">= 4.0.0"
   },
   "dependencies": {
-    "yeoman-generator": "^3.1.1",
     "chalk": "^2.1.0",
+    "mkdirp": "^1.0.4",
+    "yeoman-generator": "^3.1.1",
     "yosay": "^2.0.2"
   },
   "jest": {
@@ -72,7 +73,9 @@
   },
   "scripts": {
     "pretest": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint generators -c .eslintrc.js --ext js --fix",
+    "lint:fix": "eslint generators -c .eslintrc.js --ext js --fix"
   },
   "repository": "ntgnst/generator-create-framework-package",
   "license": "Apache-2.0"

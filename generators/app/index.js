@@ -1,45 +1,50 @@
-'use strict';
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
-const yosay = require('yosay');
 const mkdirp = require('mkdirp');
 
 module.exports = class extends Generator {
-  prompting() {
+  async prompting() {
     this.log(
-      chalk.bold.green('Welcome to the ' + chalk.bold.yellow('create-framework-package') + ' generator!')
+      chalk.bold.green(
+        `Welcome to the Piri ${chalk.bold.yellow('create-framework-package')} generator!`,
+      ),
     );
 
     const prompts = [
       {
         type: 'input',
         name: 'appName',
-        message: 'What is your app name ?',
-        default: 'my-app'
-      },
-      {
-        type: 'input',
-        name: 'gitUrl',
-        message: 'What is your project git url ? (Required)',
-        default: ''
-      },
-      {
-        type: 'input',
-        name: 'azureFeedName',
-        message: 'What is your azure feed name ? (Default: Piri.Npm)',
-        default: 'Piri.Npm'
+        message: 'App name ?',
+        default: 'my-app',
       },
       {
         type: 'input',
         name: 'appVersion',
-        message: 'What is your app version ? (Default: 0.0.0)',
-        default: '0.0.0'
-      }
+        message: 'App version ?',
+        default: '0.0.0',
+      },
+      {
+        type: 'input',
+        name: 'appDescription',
+        message: 'App description ?',
+        default: '',
+      },
+      {
+        type: 'input',
+        name: 'gitUrl',
+        message: 'Project git url ? (Required)',
+        default: '',
+      },
+      {
+        type: 'input',
+        name: 'azureFeedName',
+        message: 'Azure npm feed name ?',
+        default: 'Piri.Npm',
+      },
     ];
 
-    return this.prompt(prompts).then(props => {
-      this.props = props;
-    });
+    const props = await this.prompt(prompts);
+    this.props = props;
   }
 
   default() {
@@ -48,21 +53,47 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    this.fs.copyTpl(this.templatePath("*"), this.destinationPath(""), this.props);
-    this.fs.copyTpl(this.templatePath(".*"), this.destinationPath(""), this.props);
-    this.fs.copyTpl(this.templatePath(".husky/commit-msg"), this.destinationPath(".husky/commit-msg"), this.props);
     this.fs.copyTpl(
-      this.templatePath("package.json"),
-      this.destinationPath("package.json"),
-      this.props
+      this.templatePath('*'),
+      this.destinationPath(''),
+      this.props,
+    );
+    this.fs.copyTpl(
+      this.templatePath('.*'),
+      this.destinationPath(''),
+      this.props,
+    );
+    this.fs.copyTpl(
+      this.templatePath('.husky/commit-msg'),
+      this.destinationPath('.husky/commit-msg'),
+      this.props,
+    );
+    this.fs.copyTpl(
+      this.templatePath('package.json'),
+      this.destinationPath('package.json'),
+      this.props,
+    );
+    this.fs.copyTpl(
+      this.templatePath('.npmignore'),
+      this.destinationPath('.npmignore'),
+      this.props,
+    );
+    this.fs.copy(
+      this.templatePath('.gitignore'),
+      this.destinationPath('.gitignore'),
     );
   }
 
   install() {
-    console.log(`Initializing git repository`);
-    this.spawnCommandSync("git", ["init"]);
-    this.spawnCommandSync("git", ["remote", "add", "origin", this.props.gitUrl]);
-    console.log(`Installing dependencies`);
+    this.log(chalk.bold.green('Initializing git repository..'));
+    this.spawnCommandSync('git', ['init']);
+    this.spawnCommandSync('git', [
+      'remote',
+      'add',
+      'origin',
+      this.props.gitUrl,
+    ]);
+    this.log(chalk.bold.green('Installing dependencies..'));
     this.spawnCommandSync('npm', ['install']);
   }
 };
