@@ -1,0 +1,28 @@
+{
+  "name": "<%= appName %>",
+  "version": "<%= appVersion %>",
+  "description": "",
+  "scripts": {
+    "commit-msg:create": "node create-commit-msg.js",
+    "commitlint:config": "npm run commit-msg:create",
+    "create:versionrc": "node create-versionrc.js",
+    "enable:hooks": "npx husky install && npm run commitlint:config && npm run create:versionrc",
+    "postinstall": "npm run enable:hooks",
+    "lint": "eslint src -c .eslintrc.js --ext js --fix",
+    "lint:fix": "eslint src -c .eslintrc.js --ext js --fix"
+  },
+  "dependencies": {
+    "@commitlint/cli": "^15.0.0",
+    "@commitlint/config-conventional": "^15.0.0",
+    "husky": "^7.0.4",
+    "parse-git-config": "^3.0.0",
+    "standard-version": "^9.3.2",
+    "@piri/eslint-config": "^1.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "<%= gitUrl %>"
+  },
+  "author": "Batuhan Yahşi",
+  "license": "ISC"
+}

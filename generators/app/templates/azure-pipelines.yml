@@ -1,0 +1,45 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+  persistCredentials: true
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+  displayName: 'Install Node.js'
+
+- script: |
+      git config --global user.email "azure@bot.com"
+      git config --global user.name "azurebot"
+  displayName: 'Set User'
+
+- script: |
+    npm install
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  displayName: 'Install'
+
+- script: |
+    npx standard-version
+    git push --follow-tags origin HEAD:$(Build.SourceBranchName)
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  displayName: 'Bump Package Version'
+
+- task: Npm@1
+  inputs:
+    command: publish
+    customRegistry: useNpmrc
+    publishRegistry: useFeed
+    publishFeed: '<%= azureFeedName %>'
+  displayName: 'Publish to Feed'
+
+
